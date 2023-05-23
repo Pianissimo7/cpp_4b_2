@@ -9,7 +9,7 @@ namespace ariel {
             void shoot(Character* target);
             bool hasboolets();
             void reload();
-            void print();
+            string print();
             void attack(Character * other);
         private:
             int bullets;

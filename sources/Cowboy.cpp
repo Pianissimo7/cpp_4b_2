@@ -24,8 +24,8 @@ void Cowboy::reload() {
     }
     this->bullets = 6;
 }
-void Cowboy::print() {
-    cout << "C" << Character::print() << endl;
+string Cowboy::print() {
+    return "C" + Character::print();
 }
 void Cowboy::attack(Character * other) {
     if (other == nullptr) {

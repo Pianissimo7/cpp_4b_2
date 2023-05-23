@@ -19,8 +19,8 @@ void Ninja::slash(Character* other) {
         throw std::runtime_error("cannot attack while DEAD");
     }
 }
-void Ninja::print() {
-    cout << "N" << Character::print() << endl;
+string Ninja::print() {
+    return "N" + Character::print();
 }
 void Ninja::attack(Character *other) {
     if (other == nullptr) {

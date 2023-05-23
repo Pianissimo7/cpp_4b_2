@@ -85,6 +85,18 @@ int Team::stillAlive() {
     return count;
 }
 void Team::print() {
-    this->leader->getLocation().print();
+    for (size_t i = 0 ; i < this->team.size() ; i++) {
+        for (size_t j = 0 ; j < this->team.size() ; j++) {
+            
+            Cowboy * is_cowboy = dynamic_cast<Cowboy *>(this->team.at(j));
 
+            if (is_cowboy && i == 0 && this->team.at(j)->isAlive()) {    
+                cout << this->team.at(j)->print() << endl;
+            }
+            else if (!is_cowboy && i == 1 && this->team.at(j)->isAlive()) {
+                cout << this->team.at(j)->print() << endl;
+            }
+        }
+    }
+    
 }

@@ -4,23 +4,38 @@ using namespace ariel;
 using namespace std;
 
 void Ninja::move(Character* other) {
-    
+    this->loc = Point::moveTowards(this->loc, other->getLocation(), this->speed);
 }
 void Ninja::slash(Character* other) {
+    if (other == this) {
+        throw runtime_error("no self harm");
+    }
     if (this->isAlive()) {
-        if (this->getLocation().distance(other->getLocation()) <= 1) {
+        if (this->getLocation().distance(other->getLocation()) < 1) {
             other->hit(40);
         }
+    }
+    else {
+        throw std::runtime_error("cannot attack while DEAD");
     }
 }
 void Ninja::print() {
     cout << "N" << Character::print() << endl;
 }
 void Ninja::attack(Character *other) {
-    if (Character::loc.distance(other->getLocation()) <= 1) {
+    if (other == nullptr) {
+        throw std::invalid_argument("target cannot be a nullptr");
+    }
+    if (!Character::isAlive()) {
+        throw runtime_error("cannot attack while dead");
+    }
+    else if (!other->isAlive()) {
+        throw runtime_error("cannot a dead enemy");
+    }
+    if (this->getLocation().distance(other->getLocation()) < 1) {
         this->slash(other);
     }
     else {
-        Character::loc = loc.moveTowards(Character::loc, other->getLocation(), this->speed);
+        this->move(other);
     }
 }

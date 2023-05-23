@@ -519,18 +519,18 @@ TEST_SUITE("Battle simulations") {
 
         // The captain of team2 is the closest enemy to the captain of team1, and therefore should be dead.
         CHECK((!team2_c2->isAlive() && team2_c1->isAlive() && team2_c3->isAlive() && team2_c4->isAlive()));
-
+        team2.print(); 
         // At this point, the captain should be team2_c3; hence, the next enemy to be attacked by team2 should team_c3.
         multi_attack(6, team2, team1);
         CHECK((!team_c3->isAlive() && team_c1->isAlive() && team_c2->isAlive()));
-
+        
 
         // Killing the new captain
         while (team2_c3->isAlive()) {
             team_c1->reload();
             team_c1->shoot(team2_c3);
         }
-
+        
         CHECK((!team2_c2->isAlive() && team2_c1->isAlive() && !team2_c3->isAlive() && team2_c4->isAlive()));
 
         //Next captain should be team2_c1, hence, the next enemy to be attacked by team2 should team_cc.
@@ -599,6 +599,7 @@ TEST_SUITE("Battle simulations") {
         team2.add(t23);
 
         team.attack(&team2);
+        
         CHECK_EQ(t11->distance(t21), doctest::Approx(0).epsilon(0.001));
         CHECK_EQ(t12->distance(t21), doctest::Approx(0).epsilon(0.001));
         CHECK_EQ(t13->distance(t21), doctest::Approx(0).epsilon(0.001));

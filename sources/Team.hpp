@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <limits.h>
+#include <stdexcept>
 #include "Cowboy.hpp"
 #include "Ninja.hpp"
 #include "YoungNinja.hpp"

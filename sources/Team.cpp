@@ -2,9 +2,9 @@
 
 using namespace ariel;
 
-Team::Team(Character* leader) {
-    this->team.push_back(leader);
+Team::Team(Character* leader) : team() {
     this->leader = leader;
+    this->add(leader);
 }
 Team::~Team() {
     for (size_t i = 0 ; i < this->team.size() ; i++) {
@@ -12,9 +12,24 @@ Team::~Team() {
     }
 }
 void Team::add(Character* other) {
-    this->team.push_back(other);
+    if (other->get_playing()) {
+        throw runtime_error("player is already playing");
+    }
+    if (this->team.size() < 10) {
+        this->team.push_back(other);
+        other->set_playing(true);
+    }
+    else {
+        throw std::runtime_error("max sized team reached");
+    }
 }
 void Team::attack(Team* other) {
+    if (other == nullptr) {
+        throw std::invalid_argument("team cannot be nullptr");
+    }
+    if (other->stillAlive() == 0) {
+        throw std::runtime_error("cannot attack a dead team");
+    }
     if (!this->leader->isAlive()) {
         this->leader = this->get_closest(this->leader);
         if (!this->leader->isAlive()) {
@@ -25,9 +40,9 @@ void Team::attack(Team* other) {
         
         Character * victim = NULL;
         
-        for (size_t i = 0 ; i < this->team.size() ; i++) {
+        for (size_t j = 0 ; j < this->team.size() ; j++) {
             
-            Cowboy * is_cowboy = dynamic_cast<Cowboy *>(this->team.at(i));
+            Cowboy * is_cowboy = dynamic_cast<Cowboy *>(this->team.at(j));
             
             if (victim == NULL || !victim->isAlive()) {
                 
@@ -37,11 +52,11 @@ void Team::attack(Team* other) {
                     return;
                 }
             }
-            if (is_cowboy && i == 0) {    
-                this->team.at(i)->attack(victim);
+            if (is_cowboy && i == 0 && this->team.at(j)->isAlive()) {    
+                this->team.at(j)->attack(victim);
             }
-            else if (!is_cowboy && i == 1) {
-                this->team.at(i)->attack(victim);
+            else if (!is_cowboy && i == 1 && this->team.at(j)->isAlive()) {
+                this->team.at(j)->attack(victim);
             }
         }
     }
@@ -50,7 +65,7 @@ Character * Team::get_closest(Character *c) {
     double min_dist = std::numeric_limits<double>::max();
     size_t closest_char_index = 0;
     for (size_t i = 0 ; i < this->team.size() ; i++) {
-        if (this->team.at(i) != c) {
+        if (this->team.at(i) != c && this->team.at(i)->isAlive()) {
             double dist = this->team.at(i)->getLocation().distance(c->getLocation());
             if (dist < min_dist) {
                 min_dist = dist;
@@ -61,8 +76,15 @@ Character * Team::get_closest(Character *c) {
     return this->team.at(closest_char_index);
 }
 int Team::stillAlive() {
-    return 0;
+    int count = 0;
+    for (size_t i = 0 ; i < this->team.size() ; i++) {
+        if (this->team.at(i)->isAlive()) {
+            count++;
+        }
+    }
+    return count;
 }
 void Team::print() {
+    this->leader->getLocation().print();
 
 }

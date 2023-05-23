@@ -3,6 +3,12 @@
 using namespace ariel;
 
 void Team2::attack(Team *other) {
+    if (other == nullptr) {
+        throw std::invalid_argument("other team cannot be nullptr");
+    }
+    if (other->stillAlive() == 0) {
+        throw std::runtime_error("cannot attack a dead team");
+    }
     if (!Team::leader->isAlive()) {
         Team::leader = Team::get_closest(Team::leader);
         if (!Team::leader->isAlive()) {
@@ -22,6 +28,8 @@ void Team2::attack(Team *other) {
                 return;
             }
         }
-        Team::team.at(i)->attack(victim);
+        if (Team::team.at(i)->isAlive()) {
+            Team::team.at(i)->attack(victim);
+        }
     }
 }
